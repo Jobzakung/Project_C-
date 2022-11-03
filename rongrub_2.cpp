@@ -11,20 +11,19 @@ void del(const char *filename, int n);
 void delinput();
 void date();
 void caldate();
-int p = 0;
 
 int main()
 {
     string password;
     string user;
-    cout << "Enter Username";
+    cout << "Enter Username : ";
     cin >> user;
-    cout << "Enter Password";
+    cout << "Enter Password : ";
     cin >> password;
 
-    if (password == "1234")
+    if (password == "admin")
     {
-        if (user == "Whoishe")
+        if (user == "admin")
         {
             while (true)
             {
@@ -33,7 +32,7 @@ int main()
         }
     }
     else
-        cout << "Incorrect Input";
+        cout << "Incorrect Input : ";
 }
 
 void menu()
@@ -42,15 +41,15 @@ void menu()
     ofstream OutFile;
     ifstream InFile;
     int c;
-    std::cout << "#########################" << std::endl;
-    std::cout << "  Welcome to  Pawnshop    " << std::endl;
-    std::cout << "  Please Select Menu  " << std::endl;
-    std::cout << "#########################" << std::endl;
-    std::cout << "1. ReceiptPawn" << std::endl;
-    std::cout << "2. Display" << std::endl;
-    std::cout << "3. Search" << std::endl;
-    std::cout << "4. Delete Line" << std::endl;
-    std::cout << "5. exit Program" << std::endl;
+    std::cout << "##########################" << std::endl;
+    std::cout << "#  Welcome to  Pawnshop  #" << std::endl;
+    std::cout << "#   Please Select Menu   #" << std::endl;
+    std::cout << "##########################" << std::endl;
+    std::cout << "1. ReceiptPawn"             << std::endl;
+    std::cout << "2. Display"                 << std::endl;
+    std::cout << "3. Search"                  << std::endl;
+    std::cout << "4. Delete Line"             << std::endl;
+    std::cout << "5. exit Program"            << std::endl;
     std::cout << "Please choice in range 1 - 5 : ";
     cin >> c;
     if (c == 1)
@@ -81,17 +80,17 @@ void pawn(string fn)
 
     if (OutFile.is_open())
     {
-        string id, mod, Price, Interest;
-        int dayr, mounthr, yearr;//use to input date mouthn year
-        int exdayr, exmounthr, exyearr, Inter, Inter1, d, m, y, p;//use to inpute exdate,mounth,year and d,m,y born for save value after calculated ,p is price after become string,Inter is calculate iclude date mounth year,inter1 is a final result of Interest.
+        string id, mod, Price;
+        int dayr, mounthr, yearr;                                  // use to input date mouthn year
+        int exdayr, exmounthr, exyearr, Inter, Inter1, d, m, y, p; // use to inpute exdate,mounth,year and d,m,y born for save value after calculated ,p is price after become string,Inter is calculate iclude date mounth year,inter1 is a final result of Interest.
         std::cout << "\n Add Object \n";
-        std::cout << "Enter Id : ";
+        std::cout << "Enter Id (ex:1xxx) : ";
         std::cin >> id;
         std::cout << "Enter Prodect Name : ";
         std::cin >> mod;
-        std::cout << "Enter Date : ";
+        std::cout << "Enter Date (dd mm yyyy) : ";
         cin >> dayr >> mounthr >> yearr;
-        std::cout << "Enter Expired Date : ";
+        std::cout << "Enter Expired Date (dd mm yyyy) : ";
         cin >> exdayr >> exmounthr >> exyearr;
         std::cout << "Enter Price : ";
         std::cin >> Price;
@@ -101,7 +100,6 @@ void pawn(string fn)
         p = stoi(Price);
         Inter = abs(d * m * y * 0.265);
         Inter1 = Inter + p;
-        Interest += Price;
         OutFile << id << "\t" << mod << "\t" << Inter1 << "\t" << dayr << "/" << mounthr << "/" << yearr << "\t" << exdayr << "/" << exmounthr << "/" << exyearr << "\t" << std::endl;
 
         OutFile.close();
@@ -111,10 +109,8 @@ void pawn(string fn)
         cin.get(Wait);
     }
 }
-
 void display(string fn)
 {
-
     ifstream InFile(fn.c_str(), ios_base::in);
     if (InFile.is_open())
     {
@@ -125,22 +121,10 @@ void display(string fn)
 
         InFile >> id >> mod >> interest >> date >> exdate;
         cout << ln << endl;
-        cout << "* "
-             << " "
-             << "ID"
-             << "\t"
-             << "Model"
-             << "\t"
-             << "Interest"
-             << "\t"
-             << "Date"
-             << "\t\t"
-             << "ExDate"
-             << " *" << endl;
+        cout << "* " << " " << "ID" << "\t" << "Model" << "\t" << "Interest" << "\t" << "Date" << "\t\t" << "ExDate" << " *" << endl;
         cout << ln << endl;
         while (!InFile.eof())
         {
-
             cout << line << " :" << id << "\t" << mod << "\t" << interest << "\t\t" << date << "\t" << exdate << endl;
             cout << ln2 << endl;
             InFile >> id >> mod >> interest >> date >> exdate;
@@ -171,20 +155,8 @@ void search(string fn)
             int line = 1;
 
             cout << ln << endl;
-            cout << "* "
-                 << " "
-                 << "ID"
-                 << "\t"
-                 << "Model"
-                 << "\t"
-                 << "Interest"
-                 << "\t"
-                 << "Date"
-                 << "\t\t"
-                 << "ExDate"
-                 << " *" << endl;
+            cout << "* " << " " << "ID" << "\t" << "Model" << "\t" << "Interest" << "\t" << "Date" << "\t\t" << "ExDate" << " *" << endl;
             cout << ln << endl;
-
             while (!InFile.eof())
             {
                 InFile >> id >> mod >> interest >> date >> exdate;
@@ -195,7 +167,6 @@ void search(string fn)
                     InFile >> id >> mod >> interest >> date >> exdate;
                 }
             }
-
             InFile.close();
             char Wait;
             cin.get(Wait);
@@ -226,11 +197,9 @@ void del(const char *filename, int n)
     {
         if (c == '\n')
             line++;
-
         if (line != n)
             temp << c;
     }
-
     fin.close();
     temp.close();
     remove(filename);
