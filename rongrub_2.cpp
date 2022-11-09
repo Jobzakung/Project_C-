@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
-#include <sstream>
 
 using namespace std;
 void menu();
@@ -42,7 +41,7 @@ void menu()
     string Filename = "Receipt.txt";
     ofstream OutFile;
     ifstream InFile;
-    int c;
+    int choice;
     std::cout << "##########################" << std::endl;
     std::cout << "#  Welcome to  Pawnshop  #" << std::endl;
     std::cout << "#   Please Select Menu   #" << std::endl;
@@ -53,24 +52,24 @@ void menu()
     std::cout << "4. Delete Line"             << std::endl;
     std::cout << "5. exit Program"            << std::endl;
     std::cout << "Please choice in range 1 - 5 : ";
-    cin >> c;
-    if (c == 1)
+    cin >> choice;
+    if (choice == 1)
     {
         pawn(Filename);
     }
-    if (c == 2)
+    if (choice == 2)
     {
         display(Filename);
     }
-    if (c == 3)
+    if (choice == 3)
     {
         search(Filename);
     }
-    if (c == 4)
+    if (choice == 4)
     {
         delinput();
     }
-    if (c == 5)
+    if (choice == 5)
     {
         exit(0);
     }
