@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
+#include <sstream>
+
 using namespace std;
 void menu();
 void pawn(string fn);
@@ -80,27 +82,66 @@ void pawn(string fn)
 
     if (OutFile.is_open())
     {
-        string id, mod, Price;
-        int dayr, mounthr, yearr;                                  // use to input date mouthn year
-        int exdayr, exmounthr, exyearr, Inter, Inter1, d, m, y, p; // use to inpute exdate,mounth,year and d,m,y born for save value after calculated ,p is price after become string,Inter is calculate iclude date mounth year,inter1 is a final result of Interest.
+        string ID, Product, Price;
+
+        int Day_Input, Month_Input, Year_Input;
+
+        int Day_Expired, Month_Expired, Year_Expired;
+
         std::cout << "\n Add Object \n";
         std::cout << "Enter Id (ex:1xxx) : ";
-        std::cin >> id;
+        std::cin >> ID;
         std::cout << "Enter Prodect Name : ";
-        std::cin >> mod;
-        std::cout << "Enter Date (dd mm yyyy) : ";
-        cin >> dayr >> mounthr >> yearr;
-        std::cout << "Enter Expired Date (dd mm yyyy) : ";
-        cin >> exdayr >> exmounthr >> exyearr;
-        std::cout << "Enter Price : ";
-        std::cin >> Price;
-        d = dayr - exdayr;
-        m = mounthr - exmounthr;
-        y = yearr - exyearr;
-        p = stoi(Price);
-        Inter = abs(d * m * y * 0.265);
-        Inter1 = Inter + p;
-        OutFile << id << "\t" << mod << "\t" << Inter1 << "\t" << dayr << "/" << mounthr << "/" << yearr << "\t" << exdayr << "/" << exmounthr << "/" << exyearr << "\t" << std::endl;
+        std::cin >> Product;
+
+        char slash_dummy = '/';
+        int Interest;
+
+        std::cout << "Enter Date (dd/mm/yyyy) : ";
+        std::cin >> Day_Input;
+        if (std::cin.get() != '/')
+        {
+            std::cout << "expected /\n";
+        }
+        std::cin >> Month_Input;
+        if (std::cin.get() != '/')
+        {
+            std::cout << "expected /\n";
+        }
+        std::cin >> Year_Input;
+
+        std::cout << "Enter Expired Date (dd/mm/yyyy) : ";
+        std::cin >> Day_Expired;
+        if (std::cin.get() != '/')
+        {
+            std::cout << "expected /\n";
+        }
+        std::cin >> Month_Expired;
+        if (std::cin.get() != '/')
+        {
+            std::cout << "expected /\n";
+        }
+        std::cin >> Year_Expired;
+
+        cout << "Enter your Price : ";
+        cin >> Price;
+        int sum_date, sum_month, sum_year;
+        sum_date = abs(Day_Input - Day_Expired);
+        sum_month = abs(Month_Input - Day_Expired);
+        sum_year = abs(Year_Input - Year_Expired);
+
+        if (sum_year >= 1)
+        {
+            Interest = stoi(Price) * 0.03;
+            Interest += stoi(Price);
+        }
+        else if (sum_month >= 1)
+        {
+            Interest = stoi(Price) * 0.265;
+            Interest += stoi(Price);
+        }
+
+        OutFile << ID << "\t" << Product << "\t" << Interest << "\t" << Day_Input << slash_dummy << Month_Input << slash_dummy << Year_Input << "\t" << Day_Expired << slash_dummy << Month_Expired << slash_dummy << Year_Expired << "\t" << std::endl;
 
         OutFile.close();
         char Wait;
@@ -114,20 +155,20 @@ void display(string fn)
     ifstream InFile(fn.c_str(), ios_base::in);
     if (InFile.is_open())
     {
-        string id, mod, interest, date, exdate;
+        string ID, Product, interest, date, exdate;
         string ln(58, '=');
         string ln2(58, '-');
         int line = 1;
 
-        InFile >> id >> mod >> interest >> date >> exdate;
+        InFile >> ID >> Product >> interest >> date >> exdate;
         cout << ln << endl;
-        cout << "* " << " " << "ID" << "\t" << "Model" << "\t" << "Interest" << "\t" << "Date" << "\t\t" << "ExDate" << " *" << endl;
+        cout << "# " << " " << "ID" << "\t" << "Product" << "\t" << "Interest" << "\t" << "Date" << "\t\t" << "ExDate" << "   #" << endl;
         cout << ln << endl;
         while (!InFile.eof())
         {
-            cout << line << " :" << id << "\t" << mod << "\t" << interest << "\t\t" << date << "\t" << exdate << endl;
+            cout << line << " :" << ID << "\t" << Product << "\t" << interest << "\t\t" << date << "\t" << exdate << endl;
             cout << ln2 << endl;
-            InFile >> id >> mod >> interest >> date >> exdate;
+            InFile >> ID >> Product >> interest >> date >> exdate;
             line++;
         }
         InFile.close();
@@ -149,22 +190,22 @@ void search(string fn)
         ifstream InFile(fn.c_str(), ios_base::in);
         if (InFile.is_open())
         {
-            string id, mod, interest, date, exdate;
+            string ID, Product, interest, date, Expired_date;
             string ln(58, '=');
             string ln2(58, '-');
             int line = 1;
 
             cout << ln << endl;
-            cout << "* " << " " << "ID" << "\t" << "Model" << "\t" << "Interest" << "\t" << "Date" << "\t\t" << "ExDate" << " *" << endl;
+            cout << "* " << " " << "ID "<< "\t" << "Product" << "\t" << "Interest" << "\t" << "Date" << "\t\t" << "ExDate" << " *" << endl;
             cout << ln << endl;
             while (!InFile.eof())
             {
-                InFile >> id >> mod >> interest >> date >> exdate;
-                if (find == id)
+                InFile >> ID >> Product >> interest >> date >> Expired_date;
+                if (find == ID)
                 {
-                    cout << line << " :" << id << "\t" << mod << "\t" << interest << "\t\t" << date << "\t" << exdate << endl;
+                    cout << line << " :" << ID << "\t" << Product << "\t" << interest << "\t\t" << date << "\t" << Expired_date << endl;
                     cout << ln2 << endl;
-                    InFile >> id >> mod >> interest >> date >> exdate;
+                    InFile >> ID >> Product >> interest >> date >> Expired_date;
                 }
             }
             InFile.close();
@@ -178,10 +219,10 @@ void search(string fn)
 
 void delinput()
 {
-    int n; // line numbers
-    cout << "Which line do you want to remove? ";
-    cin >> n;
-    del("Receipt.txt", n);
+    int line; // line numbers
+    cout << "Which line do you want to remove :  ";
+    cin >> line;
+    del("Receipt.txt", line);
 }
 
 void del(const char *filename, int n)
