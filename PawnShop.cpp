@@ -4,14 +4,23 @@
 #include <iomanip>
 
 using namespace std;
+
+struct Date
+{
+    int d, m, y;
+};
+
+const int monthDays[12] = {31, 28, 31, 30, 31, 30,
+                           31, 31, 30, 31, 30, 31};
+
 void menu();
 void pawn(string fn);
 void display(string fn);
 void search(string fn);
 void del(const char *filename, int n);
 void delinput();
-void date();
-void caldate();
+int getDifference(Date dt1, Date dt2);
+int countLeapYears(Date d);
 
 int main()
 {
@@ -55,6 +64,7 @@ void menu()
     std::cout << "5. exit Program" << std::endl;
     std::cout << "Please choice in range 1 - 5 : ";
     cin >> choice;
+
     if (choice == 1)
     {
         pawn(Filename);
@@ -98,7 +108,7 @@ void pawn(string fn)
         std::cin >> Product;
 
         char slash_dummy = '/';
-        int Interest;
+        double Interest;
 
         std::cout << "Enter Date (dd/mm/yyyy) : ";
         std::cin >> Day_Input;
@@ -128,20 +138,50 @@ void pawn(string fn)
 
         cout << "Enter your Price : ";
         cin >> Price;
-        int sum_date, sum_month, sum_year;
-        sum_date = abs(Day_Input - Day_Expired);
-        sum_month = abs(Month_Input - Day_Expired);
-        sum_year = abs(Year_Input - Year_Expired);
 
-        if (sum_year >= 1)
+        Date dt1 = {Day_Input, Month_Input, Year_Input};
+        Date dt2 = {Day_Expired, Month_Expired, Year_Expired};
+
+        double y = getDifference(dt1, dt2) / 365;
+        double m = 0;
+        double d = 0;
+
+        if (y != 0)
         {
-            Interest = stoi(Price) * 0.03;
-            Interest += stoi(Price);
+            m = (getDifference(dt1, dt2) % 365 / 30);
         }
-        else if (sum_month >= 1)
+        else
         {
-            Interest = stoi(Price) * 0.265;
-            Interest += stoi(Price);
+            m = (getDifference(dt1, dt2) / 30);
+        }
+        if (m != 0)
+        {
+            d = (getDifference(dt1, dt2) % 365) % 30;
+        }
+        else
+        {
+            if (y != 0)
+            {
+                (d = getDifference(dt1, dt2) % 365);
+            }
+            else
+            {
+                d = getDifference(dt1, dt2);
+            }
+        }
+        if (getDifference(dt1, dt2) >= 365)
+        {
+            Interest = stod(Price) * 0.03;
+            Interest += stod(Price);
+        }
+        else if (getDifference(dt1, dt2) >= 28 || getDifference(dt1, dt2) >= 30 || getDifference(dt1, dt2) >= 31)
+        {
+            Interest = stod(Price) * 0.265;
+            Interest += stod(Price);
+        }
+        else if (getDifference(dt1, dt2) <= 27)
+        {
+            Interest += stod(Price);
         }
 
         OutFile << ID << "\t" << Product << "\t" << Interest << "\t" << Day_Input << slash_dummy << Month_Input << slash_dummy << Year_Input << "\t" << Day_Expired << slash_dummy << Month_Expired << slash_dummy << Year_Expired << "\t" << std::endl;
@@ -266,4 +306,31 @@ void del(const char *filename, int n)
     temp.close();
     remove(filename);
     rename("temp.txt", filename);
+}
+
+int countLeapYears(Date d)
+{
+    int years = d.y;
+
+    if (d.m <= 2)
+        years--;
+    return years / 4 - years / 100 + years / 400;
+}
+
+int getDifference(Date dt1, Date dt2)
+{
+
+    long int n1 = dt1.y * 365 + dt1.d;
+
+    for (int i = 0; i < dt1.m - 1; i++)
+        n1 += monthDays[i];
+
+    n1 += countLeapYears(dt1);
+
+    long int n2 = dt2.y * 365 + dt2.d;
+    for (int i = 0; i < dt2.m - 1; i++)
+        n2 += monthDays[i];
+    n2 += countLeapYears(dt2);
+
+    return (n2 - n1);
 }
